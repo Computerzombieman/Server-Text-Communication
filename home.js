@@ -69,4 +69,21 @@ btn.addEventListener('click', async function () {
     }
 });
 
+let lastCount = 0;
+
+async function loadPosts() {
+    const res = await fetch(API);
+    const posts = await res.json();
+
+    if (posts.length !== lastCount) {
+        objectList.innerHTML = '';
+
+        for (let post of posts) {
+            addPost(post.title, post.date, post.comments, post.description);
+        }
+
+        lastCount = posts.length;
+    }
+}
+
 loadPosts();
