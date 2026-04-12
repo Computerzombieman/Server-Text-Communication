@@ -5,6 +5,7 @@
             Forum
         </h1>
     </div>
+    
     <body>
         <div class="New-Forum">
 
@@ -25,60 +26,8 @@
             
             
         </div>
-                <script>
-                    var btn = document.getElementById('btn')
-                    btn.addEventListener('click',function(){
-                        console.log("Hello World");
-                        var nameInput = document.getElementById('name');
-                        var nameValue = String(nameInput.value);
-                        if (nameValue.length > 0) {
-                            nameInput.value = '';
-                            var objectList = document.getElementById('list');
-                            var newPost = document.createElement('li');
-                            
-                            var topElement = null;
-                            var topCount = -1;
-                            var amt = 0
-
-                            for (var element of objectList.children){
-                                amt+=1;
-                                var commentElement = element.querySelector('.comment-count');
-                                if (!commentElement) continue;
-
-                                var text = commentElement.textContent.trim();
-                                var count = parseInt(text.split(' ')[0]);
-                                if (count > topCount) {
-                                    topCount = count;
-                                    topElement = element;
-                                }
-                            }
-                            newPost.className = "row"
-                            newPost.innerHTML = `
-                            <a class="attribute" href="./Thread.html">
-                                <h4 class="title">
-                                    ${nameValue}
-                                </h4>
-                                <div class = "bottom">
-                                    <p class="timestamp">
-                                        ${new Date().toLocaleDateString()}
-                                    </p>
-                                    <p id="comCount" class="comment-count">
-                                        ${amt} comments
-                                    </p>
-                                </div>
-                            </a>
-                            `;
-                            if (topElement) {
-                                topElement.after(newPost);
-                            } else {
-                                objectList.appendChild(newPost);
-                            }
-                        }
-                        
-                    })
-                </script>
     </body>
-
+    
     <body>
         <div class="main">
             <ol id="list">
@@ -103,6 +52,7 @@
         </div>
     </body>
     
+    <script src="home.js"></script>
     
     <style>
         
