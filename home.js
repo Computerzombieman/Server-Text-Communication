@@ -4,8 +4,10 @@ const btn = document.getElementById('btn');
 
 const API = "https://server-text-communication.onrender.com/posts";
 
+let lastPostCount = 0;
+
 function addPost(title, date, comments, description) {
-    var newPost = document.createElement('li');
+    const newPost = document.createElement('li');
 
     newPost.className = "row";
     newPost.innerHTML = `
@@ -22,27 +24,37 @@ function addPost(title, date, comments, description) {
 }
 
 async function loadPosts() {
+    console.log("Fetching posts...");
+
     try {
         const res = await fetch(API);
+
+        if (!res.ok) throw new Error("Server not responding");
+
         const posts = await res.json();
 
-        objectList.innerHTML = "";
+        if (posts.length !== lastPostCount) {
+            objectList.innerHTML = "";
 
-        for (let post of posts) {
-            addPost(
-                post.title,
-                post.date,
-                post.comments,
-                post.description
-            );
+            for (let post of posts) {
+                addPost(
+                    post.title,
+                    post.date,
+                    post.comments,
+                    post.description
+                );
+            }
+
+            lastPostCount = posts.length;
         }
+
     } catch (err) {
         console.error("Failed to load posts:", err);
     }
 }
 
 btn.addEventListener('click', async function () {
-    const nameValue = nameInput.value;
+    const nameValue = nameInput.value.trim();
 
     if (nameValue.length > 0) {
         const newPost = {
@@ -62,7 +74,10 @@ btn.addEventListener('click', async function () {
             });
 
             nameInput.value = '';
-            loadPosts();
+
+            addPost(newPost.title, newPost.date, newPost.comments, newPost.description);
+            lastPostCount++;
+
         } catch (err) {
             console.error("Failed to post:", err);
         }

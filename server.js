@@ -1,6 +1,20 @@
 const { createServer } = require('node:http');
+const fs = require('fs');
+
+const FILE = 'posts.json';
 
 let posts = [];
+
+try {
+    const data = fs.readFileSync(FILE, 'utf-8');
+    posts = JSON.parse(data);
+} catch {
+    posts = [];
+}
+
+function savePosts() {
+    fs.writeFileSync(FILE, JSON.stringify(posts, null, 2));
+}
 
 const server = createServer((req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -25,11 +39,19 @@ const server = createServer((req, res) => {
         req.on('data', chunk => body += chunk);
 
         req.on('end', () => {
-            const post = JSON.parse(body);
-            posts.push(post);
+            try {
+                const post = JSON.parse(body);
 
-            res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify({ success: true }));
+                posts.push(post);
+
+                savePosts();
+
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify({ success: true }));
+            } catch (err) {
+                res.statusCode = 400;
+                res.end(JSON.stringify({ error: 'Invalid JSON' }));
+            }
         });
 
         return;
