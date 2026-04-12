@@ -76,18 +76,19 @@ btn.addEventListener('click', async function () {
 
             const data = await res.json();
 
+            console.log("SERVER RESPONSE:", data);
 
             if (!res.ok) {
-                alert(data.error);
+                alert(data.error || "Post failed");
                 return;
             }
 
             nameInput.value = '';
 
-            addPost(newPost.title, newPost.date, newPost.comments, newPost.description);
+            loadPosts();
 
         } catch (err) {
-            console.error("Failed to post:", err);
+            console.error("POST ERROR:", err);
         }
     }
 });
