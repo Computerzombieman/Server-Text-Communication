@@ -2,7 +2,7 @@ var objectList = document.getElementById('list');
 const nameInput = document.getElementById('name');
 const btn = document.getElementById('btn');
 
-const API = "https://your-app.onrender.com/posts";
+const API = "https://server-text-communication.onrender.com/posts";
 
 function addPost(title, date, comments, description) {
     var newPost = document.createElement('li');
