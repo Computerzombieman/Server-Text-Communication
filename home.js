@@ -6,6 +6,7 @@ const API = "https://server-text-communication.onrender.com/posts";
 
 let lastPostCount = 0;
 
+
 function addPost(title, date, comments, description) {
     const newPost = document.createElement('li');
 

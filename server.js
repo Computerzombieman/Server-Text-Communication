@@ -34,20 +34,34 @@ const server = createServer((req, res) => {
     }
 
     if (req.method === 'POST' && req.url === '/posts') {
-        let body = '';
+    let body = '';
 
-        req.on('data', chunk => body += chunk);
+    req.on('data', chunk => body += chunk);
 
-        req.on('end', () => {
-            try {
-                const post = JSON.parse(body);
+    req.on('end', () => {
+        try {
+            const post = JSON.parse(body);
 
-                posts.push(post);
+            const ip = req.socket.remoteAddress;
 
-                savePosts();
+            // 🔥 Count posts from this user
+            const userPosts = posts.filter(p => p.ip === ip);
 
+            if (userPosts.length >= 2) {
+                res.statusCode = 403;
                 res.setHeader('Content-Type', 'application/json');
-                res.end(JSON.stringify({ success: true }));
+                res.end(JSON.stringify({ error: "You already made 2 posts" }));
+                return;
+            }
+
+            post.ip = ip;
+
+            posts.push(post);
+            savePosts();
+
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ success: true }));
+
             } catch (err) {
                 res.statusCode = 400;
                 res.end(JSON.stringify({ error: 'Invalid JSON' }));
