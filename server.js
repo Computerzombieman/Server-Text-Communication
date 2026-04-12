@@ -44,7 +44,6 @@ const server = createServer((req, res) => {
 
             const ip = req.socket.remoteAddress;
 
-            // 🔥 Count posts from this user
             const userPosts = posts.filter(p => p.ip === ip);
 
             if (userPosts.length >= 2) {

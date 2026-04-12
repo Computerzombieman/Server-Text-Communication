@@ -66,7 +66,7 @@ btn.addEventListener('click', async function () {
         };
 
         try {
-            await fetch(API, {
+            const res = await fetch(API, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -74,10 +74,17 @@ btn.addEventListener('click', async function () {
                 body: JSON.stringify(newPost)
             });
 
+            const data = await res.json();
+
+
+            if (!res.ok) {
+                alert(data.error);
+                return;
+            }
+
             nameInput.value = '';
 
             addPost(newPost.title, newPost.date, newPost.comments, newPost.description);
-            lastPostCount++;
 
         } catch (err) {
             console.error("Failed to post:", err);
